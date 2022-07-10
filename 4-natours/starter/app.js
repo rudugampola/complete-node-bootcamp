@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const express = require('express');
 const morgan = require('morgan');
 
@@ -17,7 +18,11 @@ const app = express();
 // objects through each of the middleware. The last middleware is usually a route handler
 // that send a response instead of calling next()
 
-app.use(morgan('dev')); // morgan will log requests
+console.log(process.env.NODE_ENV); // if in production, logging won't occur
+if (process.env.NODE_ENV === 'development') {
+  // This will make sure logging occurs only during development
+  app.use(morgan('dev')); // morgan will log requests
+}
 app.use(express.json()); // parse the data from the body
 app.use(express.static(`${__dirname}/public`)); // This is for serving static files specified using directory
 
