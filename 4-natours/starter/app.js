@@ -19,7 +19,7 @@ const app = express();
 
 app.use(morgan('dev')); // morgan will log requests
 app.use(express.json()); // parse the data from the body
-app.use(express.static(`${__direname}/public`));
+app.use(express.static(`${__dirname}/public`)); // This is for serving static files specified using directory
 
 // This middleware is applied to every request, since no route specified
 // If middleware is after a certain route, it may not get executed if one of the
@@ -48,4 +48,6 @@ app.use((req, res, next) => {
 // Create a new Router
 
 app.use('/api/v1/tours', tourRouter); // Use the specific middleware function tourRouter for /api/v1/tours route specifically
-app.use('/api/v1/users', userRouter); // This is calle
+app.use('/api/v1/users', userRouter); // This is called Mounting the Router
+
+module.exports = app;
