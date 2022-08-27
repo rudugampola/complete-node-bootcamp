@@ -53,9 +53,25 @@ exports.getAllTours = async (req, res) => {
   }
 };
 
-exports.getTour = (req, res) => {
-  console.log(req.params);
-  const id = req.params.id * 1;
+exports.getTour = async (req, res) => {
+  try {
+    // Tour.findOne({ _id : req.params.id })
+    const tour = await Tour.findById(req.params.id);
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+  // console.log(req.params);
+  // const id = req.params.id * 1;
   // const tour = tours.find((el) => el.id === id);
   // res.status(200).json({
   //   status: 'success',
@@ -67,7 +83,7 @@ exports.getTour = (req, res) => {
 
 exports.createTour = async (req, res) => {
   // const newTour = new Tour({});
-  // newTour.save()
+  // newTour.save()   // .save() is a mongoose method Model.protoype in JS means it is an object
   try {
     const newTour = await Tour.create(req.body);
 
@@ -104,21 +120,41 @@ exports.createTour = async (req, res) => {
   // );
 };
 
-exports.updateTour = (req, res) => {
+exports.updateTour = async (req, res) => {
   // It is standard REST practice to send the updated item
   // back
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated Tour Here...>',
-    },
-  });
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // return the updated item
+      runValidators: true, // run the validators, check if number etc.
+    });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour, // property name is the same
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
 
-exports.deleteTour = (req, res) => {
+exports.deleteTour = async (req, res) => {
   //204 status is for no content, no data gets sent back
-  res.status(204).json({
-    status: 'success',
-    data: null, // No data sent back
-  });
+  try {
+    await Tour.findByIdAndDelete(req.params.id); // Dont save anything because no data sent back to client
+
+    res.status(204).json({
+      status: 'success',
+      data: null, // No data sent back
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
