@@ -48,6 +48,10 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'A tour must have a cover image'],
   },
   images: [String], // Array of strings, each string is a reference to an image in file system
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 // Uppercase for model names and variables
