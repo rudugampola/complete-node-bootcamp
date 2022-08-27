@@ -52,6 +52,7 @@ const tourSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  startDates: [Date],
 });
 
 // Uppercase for model names and variables

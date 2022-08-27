@@ -32,8 +32,20 @@ const Tour = require('../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
+    const queryObj = { ...req.query }; // This is a hard copy not a reference, destructuring and creating a new object
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((el) => delete queryObj[el]); // delete the excluded fields from the query object
+
+    console.log(req.query, queryObj);
     //.find will return an array of all the tours, and convert to JSON
-    const tours = await Tour.find();
+    const tours = await Tour.find(queryObj);
+
+    // Hard code the query for the search
+    // const tours = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
 
     console.log(req.requestTime);
     res.status(200).json({
